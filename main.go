@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/feebrian/reina/models"
 )
 
 var (
@@ -27,7 +28,7 @@ func main() {
 		return
 	}
 
-	// dg.AddHandler()
+	dg.AddHandler(models.MessageCreate)
 
 	dg.Identify.Intents = discordgo.IntentGuildMessages
 
