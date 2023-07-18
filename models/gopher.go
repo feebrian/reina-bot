@@ -25,54 +25,58 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == "!reina" {
 		resp, err := http.Get(KuteGoAPIURL + "/gopher/" + "dr-who")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode == http.StatusOK {
 			_, err := s.ChannelFileSend(m.ChannelID, "dr-who.png", resp.Body)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 		} else {
-			log.Fatal("Error: Can't get dr-who Gopher!")
+			log.Println("Error: Can't get dr-who Gopher!")
+			_, err := s.ChannelMessageSend(m.ChannelID, "Can't get dr-who Gopher")
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}
 
 	if m.Content == "!random" {
 		resp, err := http.Get(KuteGoAPIURL + "/gopher/random")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode == http.StatusOK {
 			_, err := s.ChannelFileSend(m.ChannelID, "random-gopher.png", resp.Body)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 		} else {
-			log.Fatal("Error: Can't get random Gopher!")
+			log.Println("Error: Can't get random Gopher!")
 		}
 	}
 
 	if m.Content == "!gophers" {
 		resp, err := http.Get(KuteGoAPIURL + "/gophers/")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode == http.StatusOK {
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 
 			var data []Gopher
 			err = json.Unmarshal(body, &data)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 
 			var gophers strings.Builder
@@ -82,10 +86,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 			_, err = s.ChannelMessageSend(m.ChannelID, gophers.String())
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 		} else {
-			log.Fatal("Error: can't get list of Gophers!")
+			log.Println("Error: can't get list of Gophers!")
 		}
 	}
 }
